@@ -22,6 +22,9 @@ app.http('getmake', {
 			context.res = {
 				status: 500,
 				body: `Error fetching makes: ${error.message}`,
+				headers: {
+					"Content-Type": "application/json"
+				}
 			};
 		}
 	}
@@ -33,9 +36,9 @@ app.http('postmake', {
 	handler: async (request, context) => {
 		context.log(`Http function processed request for url "${request.url}"`);
 
-		
-		const bodyMakes  = await request.json();
-		
+
+		const bodyMakes = await request.json();
+
 		// validate body
 		if (!Array.isArray(bodyMakes.makes) || bodyMakes.makes.length === 0) {
 			console.log("11111111111");
@@ -45,20 +48,23 @@ app.http('postmake', {
 			};
 			return context.res;
 		}
-		
-		const makes = bodyMakes.makes.map((value) => ({make: value}));
-		
+
+		const makes = bodyMakes.makes.map((value) => ({ make: value }));
+
 		console.log(makes);
-		
+
 		await connectToDatabase();
 
 		make.insertMany(makes);
 
 		console.log("cccccccccccccccccccc");
-		
+
 		context.res = {
 			status: 200,
 			body: `Successfully added ${makes.length} makes.`,
+			headers: {
+				"Content-Type": "application/json"
+			}
 		};
 		console.log("dddddddddddddddddddddd");
 
