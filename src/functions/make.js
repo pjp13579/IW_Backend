@@ -10,15 +10,16 @@ app.http('getmake', {
 		try {
 			await connectToDatabase();
 
-			const makes = await make.find();
+			const makes = JSON.stringify(await make.find().lean());
 
 			context.res = {
 				status: 200,
-				body: makes,
 				headers: {
-					"Content-Type": "application/json"
-				}
+					"Content-Type": "application/json",
+				},
+				body: makes,
 			};
+
 			return context.res;
 		} catch (error) {
 			context.log.error(`Error fetching makes: ${error.message}`);
@@ -26,6 +27,7 @@ app.http('getmake', {
 				status: 500,
 				body: `Error fetching makes: ${error.message}`,
 			};
+			return context.res;
 		}
 	}
 });
