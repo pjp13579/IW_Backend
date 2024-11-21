@@ -8,6 +8,8 @@ const connectToDatabase = require("../mongoConfig");
 /**
  * 
  * api prams
+ * @param basic true: id and name; false array of _id
+ * 
  * @param complete true: full collection; false: array of _id 
  * 
  * @param model filter by the specified model id
@@ -20,7 +22,7 @@ app.http('getsubmodel', {
 		try {
 			await connectToDatabase();
 
-			const { model, complete } = request.params;	// if id is not specified, return every model
+			const { model, basic, complete } = request.params;	// if id is not specified, return every model
 
 			const query = { archived: false };
 
@@ -38,7 +40,9 @@ app.http('getsubmodel', {
 
 			let submodels = await submodel.find(query).lean();
 
-			if(complete == null || typeof complete == 'undefined' || complete != "true"){
+			if (basic != null && typeof basic != 'undefined' && basic == "true") {
+				submodels = submodels.map(item => ({ id: item._id, make:item.submodel }));
+			} else if(complete == null || typeof complete == 'undefined' || complete != "true"){
 				submodels = submodels.map(item => item._id);
 			}
 

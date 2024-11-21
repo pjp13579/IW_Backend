@@ -8,6 +8,8 @@ const { default: mongoose } = require('mongoose');
 /**
  * 
  * api prams
+ * @param basic true: id and name; false array of _id
+ * 
  * @param complete true: full collection; false: array of _id 
  * 
  * @param make filter by the specified model id
@@ -22,7 +24,7 @@ app.http('getmodel', {
 
 			const query = { archived: false };
 
-			const { make, complete } = request.params;
+			const { make, basic, complete } = request.params;
 
 			if (make) {
 				if (mongoose.Types.ObjectId.isValid(make)) {
@@ -39,7 +41,9 @@ app.http('getmodel', {
 
 			let models = await model.find(query).lean();
 
-			if(complete == null || typeof complete == 'undefined' || complete != "true"){
+			if (basic != null && typeof basic != 'undefined' && basic == "true") {
+				models = models.map(item => ({ _id: item._id, make: item.model }));
+			} else if (complete == null || typeof complete == 'undefined' || complete != "true") {
 				models = models.map(item => item._id);
 			}
 

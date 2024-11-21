@@ -5,6 +5,8 @@ const connectToDatabase = require("../mongoConfig");
 /**
  * 
  * api prams
+ * @param basic true: id and name; false array of _id
+ * 
  * @param complete true: full collection; false: array of _id 
  * 
  */
@@ -16,11 +18,13 @@ app.http('getmake', {
 		try {
 			await connectToDatabase();
 
-			const { complete } = request.params;
+			const { basic, complete } = request.params;
 
 			let makes = await make.find({ archived: false }).lean();
 
-			if (complete == null || typeof complete == 'undefined' || complete != "true") {
+			if (basic != null && typeof basic != 'undefined' && basic == "true") {
+				makes = makes.map(item => ({ _id: item._id, make: item.make }));
+			} else if (complete == null || typeof complete == 'undefined' || complete != "true") {
 				makes = makes.map(item => item._id);
 			}
 
