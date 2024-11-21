@@ -5,7 +5,8 @@ const makeSchema = new mongoose.Schema({
 	make: {
 		type: String,
 		require: true,
-	}
+	},
+	archived: Boolean
 });
 
 const make = mongoose.model("makes", makeSchema);

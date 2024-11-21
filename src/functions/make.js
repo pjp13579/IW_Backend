@@ -10,7 +10,7 @@ app.http('getmake', {
 		try {
 			await connectToDatabase();
 
-			const makes = JSON.stringify(await make.find().lean());
+			const makes = JSON.stringify(await make.find({ archived: false }).lean());
 
 			context.res = {
 				status: 200,
@@ -43,7 +43,6 @@ app.http('postmake', {
 
 		// validate body
 		if (!Array.isArray(bodyMakes.makes) || bodyMakes.makes.length === 0) {
-			console.log("11111111111");
 			context.res = {
 				status: 400,
 				body: "Invalid input. Provide a non-empty array of 'makes'."
@@ -51,7 +50,10 @@ app.http('postmake', {
 			return context.res;
 		}
 
-		const makes = bodyMakes.makes.map((value) => ({ make: value }));
+		const makes = bodyMakes.makes.map((value) => ({
+			make: value,
+			archived: false
+		}));
 
 		console.log(makes);
 
@@ -70,3 +72,25 @@ app.http('postmake', {
 		return context.res;
 	}
 });
+
+async function findMakeByName(name) {
+	
+	await connectToDatabase();
+	
+	return make.findOne({
+		make: name,
+		archived: false
+	});
+}
+
+async function findAllMakes(){
+	await connectToDatabase();
+
+	return make.find({archived: false});
+}
+
+
+module.exports = {
+	findMakeByName,
+	findAllMakes
+};
