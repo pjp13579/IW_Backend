@@ -14,7 +14,7 @@ app.http('getmake', {
 
 			context.res = {
 				status: 200,
-				body: JSON.stringify(makes),
+				body: makes,
 			};
 			return context.res;
 		} catch (error) {
@@ -57,8 +57,6 @@ app.http('postmake', {
 
 		make.insertMany(makes);
 
-		console.log("cccccccccccccccccccc");
-
 		context.res = {
 			status: 200,
 			body: `Successfully added ${makes.length} makes.`,
@@ -66,7 +64,6 @@ app.http('postmake', {
 				"Content-Type": "application/json"
 			}
 		};
-		console.log("dddddddddddddddddddddd");
 
 		return context.res;
 	}
