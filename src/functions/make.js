@@ -15,6 +15,9 @@ app.http('getmake', {
 			context.res = {
 				status: 200,
 				body: makes,
+				headers: {
+					"Content-Type": "application/json"
+				}
 			};
 			return context.res;
 		} catch (error) {
@@ -22,9 +25,6 @@ app.http('getmake', {
 			context.res = {
 				status: 500,
 				body: `Error fetching makes: ${error.message}`,
-				headers: {
-					"Content-Type": "application/json"
-				}
 			};
 		}
 	}
