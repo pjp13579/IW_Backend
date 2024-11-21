@@ -2,6 +2,12 @@ const { app } = require('@azure/functions');
 const make = require('../models/make');
 const connectToDatabase = require("../mongoConfig");
 
+/**
+ * 
+ * api prams
+ * @param complete true: full collection; false: array of _id 
+ * 
+ */
 app.http('getmake', {
 	methods: ['GET'],
 	authLevel: 'anonymous',
@@ -10,19 +16,25 @@ app.http('getmake', {
 		try {
 			await connectToDatabase();
 
-			const makes = JSON.stringify(await make.find({ archived: false }).lean());
+			const { complete } = request.params;
+
+			let makes = await make.find({ archived: false }).lean();
+
+			if (complete == null || typeof complete == 'undefined' || complete != "true") {
+				makes = makes.map(item => item._id);
+			}
 
 			context.res = {
 				status: 200,
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: makes,
+				body: JSON.stringify(makes),
 			};
 
 			return context.res;
 		} catch (error) {
-			context.log.error(`Error fetching makes: ${error.message}`);
+			//context.log.error(`Error fetching makes: ${error.message}`);
 			context.res = {
 				status: 500,
 				body: `Error fetching makes: ${error.message}`,
@@ -74,19 +86,19 @@ app.http('postmake', {
 });
 
 async function findMakeByName(name) {
-	
+
 	await connectToDatabase();
-	
+
 	return make.findOne({
 		make: name,
 		archived: false
 	});
 }
 
-async function findAllMakes(){
+async function findAllMakes() {
 	await connectToDatabase();
 
-	return make.find({archived: false});
+	return make.find({ archived: false });
 }
 
 

@@ -4,6 +4,14 @@ const { findModelByName, findAllModels } = require('./model');
 const submodel = require('../models/submodel');
 const connectToDatabase = require("../mongoConfig");
 
+
+/**
+ * 
+ * api prams
+ * @param complete true: full collection; false: array of _id 
+ * 
+ * @param model filter by the specified model id
+ */
 app.http('getsubmodel', {
 	methods: ['GET'],
 	authLevel: 'anonymous',
@@ -12,7 +20,7 @@ app.http('getsubmodel', {
 		try {
 			await connectToDatabase();
 
-			const { model } = request.params;	// if id is not specified, return every model
+			const { model, complete } = request.params;	// if id is not specified, return every model
 
 			const query = { archived: false };
 
@@ -28,19 +36,23 @@ app.http('getsubmodel', {
 				}
 			}
 
-			const submodels = JSON.stringify(await submodel.find(query).lean());
+			let submodels = await submodel.find(query).lean();
+
+			if(complete == null || typeof complete == 'undefined' || complete != "true"){
+				submodels = submodels.map(item => item._id);
+			}
 
 			context.res = {
 				status: 200,
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: submodels,
+				body: JSON.stringify(submodels),
 			};
 
 			return context.res;
 		} catch (error) {
-			context.log.error(`Error fetching models: ${error.message}`);
+			//context.log.error(`Error fetching models: ${error.message}`);
 			context.res = {
 				status: 500,
 				body: `Error fetching models: ${error.message}`,

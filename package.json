@@ -7,8 +7,11 @@
     "test": "echo \"No tests yet...\""
   },
   "dependencies": {
-    "@azure/functions": "^4.0.0",
-    "mongoose": "^8.8.2"
+    "@azure/functions": "^4.6.0",
+    "@azure/openapi": "^3.0.104",
+    "mongoose": "^8.8.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "main": "src/{index.js,functions/*.js}"
 }

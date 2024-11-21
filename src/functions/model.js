@@ -4,6 +4,14 @@ const model = require('../models/model');
 const connectToDatabase = require("../mongoConfig");
 const { default: mongoose } = require('mongoose');
 
+
+/**
+ * 
+ * api prams
+ * @param complete true: full collection; false: array of _id 
+ * 
+ * @param make filter by the specified model id
+ */
 app.http('getmodel', {
 	methods: ['GET'],
 	authLevel: 'anonymous',
@@ -14,7 +22,7 @@ app.http('getmodel', {
 
 			const query = { archived: false };
 
-			const { make } = request.params;
+			const { make, complete } = request.params;
 
 			if (make) {
 				if (mongoose.Types.ObjectId.isValid(make)) {
@@ -29,19 +37,23 @@ app.http('getmodel', {
 			}
 
 
-			const models = JSON.stringify(await model.find(query).lean());
+			let models = await model.find(query).lean();
+
+			if(complete == null || typeof complete == 'undefined' || complete != "true"){
+				models = models.map(item => item._id);
+			}
 
 			context.res = {
 				status: 200,
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: models,
+				body: JSON.stringify(models),
 			};
 
 			return context.res;
 		} catch (error) {
-			context.log.error(`Error fetching models: ${error.message}`);
+			//context.log.error(`Error fetching models: ${error.message}`);
 			context.res = {
 				status: 500,
 				body: `Error fetching models: ${error.message}`,
