@@ -41,7 +41,7 @@ app.http('getsubmodel', {
 			let submodels = await submodel.find(query).lean();
 
 			if (basic != null && typeof basic != 'undefined' && basic == "true") {
-				submodels = submodels.map(item => ({ id: item._id, make:item.submodel }));
+				submodels = submodels.map(item => ({ id: item._id, submodel:item.submodel }));
 			} else if(complete == null || typeof complete == 'undefined' || complete != "true"){
 				submodels = submodels.map(item => item._id);
 			}

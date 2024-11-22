@@ -42,7 +42,7 @@ app.http('getmodel', {
 			let models = await model.find(query).lean();
 
 			if (basic != null && typeof basic != 'undefined' && basic == "true") {
-				models = models.map(item => ({ _id: item._id, make: item.model }));
+				models = models.map(item => ({ _id: item._id, model: item.model }));
 			} else if (complete == null || typeof complete == 'undefined' || complete != "true") {
 				models = models.map(item => item._id);
 			}
