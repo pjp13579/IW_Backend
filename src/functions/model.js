@@ -48,27 +48,25 @@ app.http('getmodel', {
 			}
 
 			if (!models) {
-				context.res.status = 204;	// no content
+				context.res = { ...context.res, status: 204 };	// no content
 			}
 			else {
-				context.res.status = 200;
+				context.res = { ...context.res, status: 200 };
 			}
 
 			context.res = {
+				...context.res,
 				headers: {
-					"Content-Type": "application/json",
-					"Access-Control-Allow-Origin": "*",
-					"Access-Control-Allow-Credentials": true
+					"Content-Type": "application/json"
 				},
 				body: JSON.stringify(models),
 			};
 
 			return context.res;
 		} catch (error) {
-			//context.log.error(`Error fetching models: ${error.message}`);
+			context.error(`Error fetching models: ${error.message}`);
 			context.res = {
-				status: 500,
-				body: `Error fetching models: ${error.message}`,
+				status: 400
 			};
 			return context.res;
 		}

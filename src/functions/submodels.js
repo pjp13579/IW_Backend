@@ -42,32 +42,30 @@ app.http('getsubmodel', {
 
 			if (basic != null && typeof basic != 'undefined' && basic == "true") {
 				submodels = submodels.map(item => ({ id: item._id, submodel: item.submodel }));
-			} else if(complete == null || typeof complete == 'undefined' || complete != "true"){
+			} else if (complete == null || typeof complete == 'undefined' || complete != "true") {
 				submodels = submodels.map(item => item._id);
 			}
 
 			if (!submodels) {
-				context.res.status = 204;	// no content
+				context.res = { ...context.res, status: 204 };	// no content
 			}
 			else {
-				context.res.status = 200;
+				context.res = { ...context.res, status: 200 };
 			}
 
 			context.res = {
+				...context.res,
 				headers: {
-					"Content-Type": "application/json",
-					"Access-Control-Allow-Origin" : "*", 
-					"Access-Control-Allow-Credentials" : true 
+					"Content-Type": "application/json"
 				},
 				body: JSON.stringify(submodels),
 			};
 
 			return context.res;
 		} catch (error) {
-			//context.log.error(`Error fetching models: ${error.message}`);
+			context.error(`Error fetching models: ${error.message}`);
 			context.res = {
-				status: 500,
-				body: `Error fetching models: ${error.message}`,
+				status: 400
 			};
 			return context.res;
 		}

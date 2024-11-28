@@ -29,27 +29,28 @@ app.http('getmake', {
 			}
 
 			if (!makes) {
-				context.res.status = 204;	// no content
+				context.res = { ...context.res, status: 204 };	// no content
 			}
 			else {
-				context.res.status = 200;
+				context.res = { ...context.res, status: 200 };	// no content
+				
 			}
 
 			context.res = {
+				...context.res,	//  carry statuscode
 				headers: {
 					"Content-Type": "application/json",
-					"Access-Control-Allow-Origin" : "*", 
-					"Access-Control-Allow-Credentials" : true 
+					"Access-Control-Allow-Origin": "*",
+					"Access-Control-Allow-Credentials": true
 				},
 				body: JSON.stringify(makes),
 			};
 
 			return context.res;
 		} catch (error) {
-			//context.log.error(`Error fetching makes: ${error.message}`);
+			context.error(`Error fetching makes: ${error.message}`);
 			context.res = {
-				status: 500,
-				body: `Error fetching makes: ${error.message}`,
+				status: 400
 			};
 			return context.res;
 		}
