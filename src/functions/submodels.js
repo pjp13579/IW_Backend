@@ -41,13 +41,19 @@ app.http('getsubmodel', {
 			let submodels = await submodel.find(query).lean();
 
 			if (basic != null && typeof basic != 'undefined' && basic == "true") {
-				submodels = submodels.map(item => ({ id: item._id, submodel:item.submodel }));
+				submodels = submodels.map(item => ({ id: item._id, submodel: item.submodel }));
 			} else if(complete == null || typeof complete == 'undefined' || complete != "true"){
 				submodels = submodels.map(item => item._id);
 			}
 
+			if (!submodels) {
+				context.res.status = 204;	// no content
+			}
+			else {
+				context.res.status = 200;
+			}
+
 			context.res = {
-				status: 200,
 				headers: {
 					"Content-Type": "application/json",
 					"Access-Control-Allow-Origin" : "*", 
@@ -103,7 +109,7 @@ app.http('postsubmodel', {
 		submodel.insertMany(submodelsMongoose);
 
 		context.res = {
-			status: 200,
+			status: 201,
 			body: `Successfully added ${submodelsMongoose.length} submodels.`,
 			headers: {
 				"Content-Type": "application/json"

@@ -47,12 +47,18 @@ app.http('getmodel', {
 				models = models.map(item => item._id);
 			}
 
+			if (!models) {
+				context.res.status = 204;	// no content
+			}
+			else {
+				context.res.status = 200;
+			}
+
 			context.res = {
-				status: 200,
 				headers: {
 					"Content-Type": "application/json",
-					"Access-Control-Allow-Origin" : "*", 
-					"Access-Control-Allow-Credentials" : true 
+					"Access-Control-Allow-Origin": "*",
+					"Access-Control-Allow-Credentials": true
 				},
 				body: JSON.stringify(models),
 			};
@@ -101,7 +107,7 @@ app.http('postmodel', {
 		model.insertMany(modelsMongoose);
 
 		context.res = {
-			status: 200,
+			status: 201,
 			body: `Successfully added ${modelsMongoose.length} models.`,
 			headers: {
 				"Content-Type": "application/json"

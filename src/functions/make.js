@@ -28,8 +28,14 @@ app.http('getmake', {
 				makes = makes.map(item => item._id);
 			}
 
+			if (!makes) {
+				context.res.status = 204;	// no content
+			}
+			else {
+				context.res.status = 200;
+			}
+
 			context.res = {
-				status: 200,
 				headers: {
 					"Content-Type": "application/json",
 					"Access-Control-Allow-Origin" : "*", 
@@ -80,7 +86,7 @@ app.http('postmake', {
 		make.insertMany(makes);
 
 		context.res = {
-			status: 200,
+			status: 201,
 			body: `Successfully added ${makes.length} makes.`,
 			headers: {
 				"Content-Type": "application/json"
