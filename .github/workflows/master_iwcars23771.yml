@@ -34,13 +34,6 @@ jobs:
           npm run test --if-present
           popd
 
-      - name: 'Run Azure Functions Action'
-        uses: Azure/functions-action@v1
-        id: fa
-        with:
-          app-name: 'iwcars23771'
-          slot-name: 'Production'
-
   deploy:
     runs-on: windows-latest
     needs: build
