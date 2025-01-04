@@ -101,8 +101,8 @@ app.http('postsubmodel', {
 				}
 			}
 		}
-		console.log(submodelsMongoose);
-		console.log("");
+		//console.log(submodelsMongoose);
+		//console.log("");
 
 		submodel.insertMany(submodelsMongoose);
 

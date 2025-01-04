@@ -4,11 +4,11 @@ const userSchema = new mongoose.Schema({
 	_id: mongoose.Schema.Types.ObjectId,
 	name: {
 		type: String,
-		require: true,
+		required: true,
 	},
 	displayName: {
 		type: String,
-		require: true,
+		required: true,
 	},
 	password: {
 		type: String,
