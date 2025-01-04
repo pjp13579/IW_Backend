@@ -101,8 +101,6 @@ app.http('postsubmodel', {
 				}
 			}
 		}
-		//console.log(submodelsMongoose);
-		//console.log("");
 
 		submodel.insertMany(submodelsMongoose);
 
@@ -117,3 +115,27 @@ app.http('postsubmodel', {
 		return context.res;
 	}
 });
+
+/**
+ * 
+ * @param  id type mongoose.ObjectId 
+ * @returns 
+ */
+async function getSubmodelNameForId(id) {
+
+	await connectToDatabase();
+
+	const subMod = await submodel.findById(id);
+
+	if(subMod){
+		return subMod.submodel;
+	}
+	else {
+		return "Unknown submodel"
+	}
+}
+
+module.exports = {
+	getSubmodelNameForId
+};
+

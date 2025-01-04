@@ -147,7 +147,6 @@ app.http('user', {
 
 			return context.res;
 		} catch (error) {
-			//context.log.error(`Error fetching models: ${error.message}`);
 			context.res = {
 				status: 500,
 				body: `Error fetching models: ${error.message}`,
@@ -156,3 +155,22 @@ app.http('user', {
 		}
 	}
 });
+
+
+async function getUserNameForId(id) {
+
+	await connectToDatabase();
+
+	const usr = await userModel.findById(id);
+
+	if(usr){
+		return usr.displayName;
+	}
+	else {
+		return "Unknown user"
+	}
+}
+
+module.exports = {
+	getUserNameForId
+}

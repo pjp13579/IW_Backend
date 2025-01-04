@@ -126,6 +126,25 @@ async function findModelByName(name) {
 	});
 }
 
+/**
+ * 
+ * @param  id type mongoose.ObjectId 
+ * @returns 
+ */
+async function getModelNameForId(id) {
+
+	await connectToDatabase();
+
+	const mod = await model.findById(id);
+
+	if(mod){
+		return mod.model;
+	}
+	else {
+		return "Unknown model"
+	}
+}
+
 async function findAllModels() {
 	await connectToDatabase();
 
@@ -135,5 +154,6 @@ async function findAllModels() {
 
 module.exports = {
 	findModelByName,
-	findAllModels
+	findAllModels,
+	getModelNameForId
 };

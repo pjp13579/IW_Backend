@@ -33,7 +33,7 @@ app.http('getmake', {
 			}
 			else {
 				context.res = { ...context.res, status: 200 };	// no content
-				
+
 			}
 
 			context.res = {
@@ -108,6 +108,25 @@ async function findMakeByName(name) {
 	});
 }
 
+/**
+ * 
+ * @param  id type mongoose.ObjectId 
+ * @returns 
+ */
+async function getMakeNameForId(id) {
+
+	await connectToDatabase();
+
+	const mak = await make.findById(id);
+
+	if(mak){
+		return mak.make;
+	}
+	else {
+		return "Unknown make"
+	}
+}
+
 async function findAllMakes() {
 	await connectToDatabase();
 
@@ -117,5 +136,6 @@ async function findAllMakes() {
 
 module.exports = {
 	findMakeByName,
-	findAllMakes
+	findAllMakes,
+	getMakeNameForId
 };

@@ -2,7 +2,10 @@ const { app } = require('@azure/functions');
 const post = require('../models/post');
 const connectToDatabase = require("../mongoConfig");
 const { default: mongoose } = require('mongoose');
-
+const { getMakeNameForId } = require('./make');
+const { getModelNameForId } = require('./model');
+const { getSubmodelNameForId } = require('./submodels');
+const { getUserNameForId } = require('./user');
 
 /**
  * 
@@ -55,7 +58,6 @@ app.http('getpostfilter', {
 			}
 
 
-
 			let query = {};
 
 			const queryOffset = (page - 1) * pagesize;	// Calculate offset value for pagination
@@ -68,15 +70,20 @@ app.http('getpostfilter', {
 			}
 
 			let posts = await post.find(query).skip(queryOffset).limit(pagesize).lean();
-			
+
 			let statusCode = 200;
 			if (posts.length == 0) {
 				statusCode = 204;	// no content for query
 			}
-			
+
 			// total count for total pages calculation on the frontend
 			const totalPosts = await post.countDocuments(query);
 			const totalPages = Math.ceil(totalPosts / pagesize);
+
+			// ------------------------------------- Format id fields -------------------------------------
+
+			const dto = await processPosts(posts);
+
 
 			// ------------------------------------- Response -------------------------------------
 			context.res = {
@@ -87,7 +94,7 @@ app.http('getpostfilter', {
 					"Access-Control-Allow-Origin": "*",
 					"Access-Control-Allow-Credentials": true
 				},
-				body: JSON.stringify({posts, totalPosts, totalPages, currentPage: parseInt(page), pagesize: parseInt(pagesize)}),
+				body: JSON.stringify({ dto, totalPosts, totalPages, currentPage: parseInt(page), pagesize: parseInt(pagesize) }),
 			};
 
 			return context.res;
@@ -100,6 +107,23 @@ app.http('getpostfilter', {
 		}
 	}
 });
+
+async function processPosts(posts) {
+	return Promise.all(
+		posts.map(async (post) => {
+			return {
+				...post, // Spread existing post properties
+				publisherUserName: await getUserNameForId(post.publisherUserId),
+				vehicleDetails: {
+					...post.vehicleDetails, // Spread existing vehicleDetails
+					makeName: await getMakeNameForId(post.vehicleDetails.make),
+					modelName: await getModelNameForId(post.vehicleDetails.model),
+					submodelName: await getSubmodelNameForId(post.vehicleDetails.submodel),
+				},
+			};
+		})
+	);
+};
 
 async function queryBuilder(body) {
 	const query = {};
