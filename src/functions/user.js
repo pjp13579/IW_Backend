@@ -131,12 +131,13 @@ app.http('user', {
 
 				return context.res;
 			}
-
+			
 			user = { _id: new mongoose.Types.ObjectId(), "name": username, "password": password, "displayName": username, "archived": false }
 
 			userModel.create(user);
-			let response = {};
-
+			
+			let response = { _id: user._id, name: user.name, displayName: user.displayName };
+			
 			context.res = {
 				status: 201,
 				headers: {
