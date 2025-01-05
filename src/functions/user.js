@@ -40,16 +40,16 @@ app.http('userauth', {
 
 			let user = await userModel.find(query).lean();
 
-			// user not found or wrong password return
-			if (!user) {
+			// user does not exist or wrong password
+			if (user.length !== 1) {
 				context.res = {
-					status: 204,
+					status: 400,
 					headers: {
 						"Content-Type": "application/json",
 						"Access-Control-Allow-Origin": "*",
 						"Access-Control-Allow-Credentials": true
 					},
-					body: JSON.stringify({ "Cause": "Request fields did not match to a user" })
+					body: JSON.stringify({ "Cause": "Request fields did not match to a user. Login failed" })
 				};
 
 				return context.res;
