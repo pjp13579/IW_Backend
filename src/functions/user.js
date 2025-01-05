@@ -55,11 +55,8 @@ app.http('userauth', {
 				return context.res;
 			}
 
-			let response = {};
-
-			if (user) {
-				response = { _id: user._id, name: user.name, "displayName": user.displayName };
-			}
+			const response = { _id: user[0]._id, name: user[0].name, "displayName": user[0].displayName };
+			
 
 			context.res = {
 				status: 206,

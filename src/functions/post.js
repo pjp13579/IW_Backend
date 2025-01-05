@@ -34,6 +34,8 @@ const { getUserNameForId } = require('./user');
  * @param fuel
  * @param powertrain
  * @param origincountry
+ * @param thumbnailImage
+ * @param images
  */
 app.http('getpostfilter', {
 	methods: ['POST'],
