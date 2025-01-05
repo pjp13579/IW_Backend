@@ -74,6 +74,15 @@ const postSchema = new mongoose.Schema({
 		origincountry: {
 			type: String,
 			require: true,
+		},
+		thumbnailImage: {
+			type: String,
+			require: true,
+		}
+		,
+		images: {
+			type: mongoose.Schema.Types.Array,
+			require: true,
 		}
 	},
 	archived: Boolean,
