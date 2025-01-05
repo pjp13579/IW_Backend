@@ -266,10 +266,11 @@ app.http('createpost', {
 
 			// verify car properties
 			for (const fieldName in vehicleDetails) {
-				if(fieldName === "submodel"){
+				
+				const field = vehicleDetails[fieldName].split(".")[1];
+				if(fieldName == "submodel"){
 					continue;	// submodel is an optional field
 				}
-				const field = vehicleDetails[fieldName].split(".")[1];
 				// validate if the field is present in the request body
 				if (body.vehicleDetails[field] === null || body.vehicleDetails[field] === undefined) {
 					missingFields.push(field);	// field is missing
