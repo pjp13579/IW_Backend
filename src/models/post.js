@@ -8,9 +8,18 @@ const postSchema = new mongoose.Schema({
 		required: true,
 	},
 	vehicleDetails: {
-		make: mongoose.Schema.Types.ObjectId,
-		model: mongoose.Schema.Types.ObjectId,
-		submodel: mongoose.Schema.Types.ObjectId,
+		make: {
+			type: mongoose.Schema.Types.ObjectId,
+			require: true
+		},
+		model: {
+			type: mongoose.Schema.Types.ObjectId,
+			require: true
+		},
+		submodel: {
+			type: mongoose.Schema.Types.ObjectId,
+			require: false
+		},
 		kilometers: {
 			type: Number,
 			require: true,
