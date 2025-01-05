@@ -6,7 +6,8 @@ const connectToDatabase = require("../mongoConfig");
 
 /**
  * 
- * api prams
+ * validates user login credentials (login)
+ * 
  * @param username account username
  * 
  * @param password account password
@@ -84,7 +85,8 @@ app.http('userauth', {
 
 /**
  * 
- * api prams
+ * creates a user (signup)
+ * 
  * @param username account username
  * 
  * @param password account password
@@ -136,7 +138,7 @@ app.http('user', {
 			let response = {};
 
 			context.res = {
-				status: 206,
+				status: 201,
 				headers: {
 					"Content-Type": "application/json",
 					"Access-Control-Allow-Origin": "*",
