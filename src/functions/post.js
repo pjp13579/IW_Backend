@@ -81,7 +81,7 @@ app.http('getpostfilter', {
 
 			// ------------------------------------- Format id fields -------------------------------------
 
-			let dto = {};
+			let dto = [];
 			if (posts.length !== 0) {
 				dto = await processPosts(posts);
 			}
