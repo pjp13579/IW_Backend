@@ -268,7 +268,7 @@ app.http('createpost', {
 			for (const fieldName in vehicleDetails) {
 				
 				const field = vehicleDetails[fieldName].split(".")[1];
-				if(fieldName == "submodel"){
+				if(field == "submodel"){
 					continue;	// submodel is an optional field
 				}
 				// validate if the field is present in the request body
