@@ -268,8 +268,8 @@ app.http('createpost', {
 			for (const fieldName in vehicleDetails) {
 				
 				const field = vehicleDetails[fieldName].split(".")[1];
-				if(field == "submodel"){
-					continue;	// submodel is an optional field
+				if(field == "submodel" && (body.vehicleDetails[field] === null || body.vehicleDetails[field] === undefined)){
+					newPost.vehicleDetails[field]
 				}
 				// validate if the field is present in the request body
 				if (body.vehicleDetails[field] === null || body.vehicleDetails[field] === undefined) {
