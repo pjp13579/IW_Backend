@@ -73,10 +73,7 @@ app.http('getpostfilter', {
 
 			let posts = await post.find(query).skip(queryOffset).limit(pagesize).lean();
 
-			let statusCode = 200;
-			if (posts.length == 0) {
-				statusCode = 204;	// no content for query
-			}
+
 
 			// total count for total pages calculation on the frontend
 			const totalPosts = await post.countDocuments(query);
@@ -84,19 +81,19 @@ app.http('getpostfilter', {
 
 			// ------------------------------------- Format id fields -------------------------------------
 
-			const dto = await processPosts(posts);
-
+			let dto = {};
+			if (posts.length !== 0) {
+				dto = await processPosts(posts);
+			}
+			// http 204 'No content' cannot have a body present
 
 			// ------------------------------------- Response -------------------------------------
 			context.res = {
-				...context.res,	//  carry statuscode
-				status: statusCode,
+				status: 200,
 				headers: {
-					"Content-Type": "application/json",
-					"Access-Control-Allow-Origin": "*",
-					"Access-Control-Allow-Credentials": true
+					"Content-Type": "application/json"
 				},
-				body: JSON.stringify({ dto, totalPosts, totalPages, currentPage: parseInt(page), pagesize: parseInt(pagesize) }),
+				body: JSON.stringify({ dto, totalPosts, totalPages, currentPage: parseInt(page), pagesize: parseInt(pagesize) })
 			};
 
 			return context.res;
@@ -266,9 +263,9 @@ app.http('createpost', {
 
 			// verify car properties
 			for (const fieldName in vehicleDetails) {
-				
+
 				const field = vehicleDetails[fieldName].split(".")[1];
-				if(field == "submodel" && (body.vehicleDetails[field] === null || body.vehicleDetails[field] === undefined)){
+				if (field == "submodel" && (body.vehicleDetails[field] === null || body.vehicleDetails[field] === undefined)) {
 					newPost.vehicleDetails[field]
 				}
 				// validate if the field is present in the request body
